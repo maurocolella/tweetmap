@@ -23,7 +23,7 @@ function Sphere(props: SpherePropType) {
           props.heightSegments ?? 36,
         ]}
       />
-      <meshStandardMaterial color={'white'} />
+      <meshStandardMaterial color={'blue'} />
     </mesh>
   )
 }
