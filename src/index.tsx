@@ -1,23 +1,29 @@
 import * as THREE from 'three'
 import { createRoot } from 'react-dom/client'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { Canvas, useFrame, ThreeElements } from '@react-three/fiber'
 
-function Box(props: ThreeElements['mesh']) {
+type SpherePropType = ThreeElements['mesh'] & {
+  radius?: number,
+  widthSegments?: number,
+  heightSegments?: number,
+}
+
+function Sphere(props: SpherePropType) {
   const ref = useRef<THREE.Mesh>(null!)
-  const [hovered, hover] = useState(false)
-  const [clicked, click] = useState(false)
   useFrame((state, delta) => (ref.current.rotation.x += 0.01))
   return (
     <mesh
       {...props}
-      ref={ref}
-      scale={clicked ? 1.5 : 1}
-      onClick={(event) => click(!clicked)}
-      onPointerOver={(event) => hover(true)}
-      onPointerOut={(event) => hover(false)}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      ref={ref}>
+      <sphereBufferGeometry args={
+        [
+          props.radius ?? 1,
+          props.widthSegments ?? 36,
+          props.heightSegments ?? 36,
+        ]}
+      />
+      <meshStandardMaterial color={'white'} />
     </mesh>
   )
 }
@@ -27,8 +33,12 @@ createRoot(document.getElementById('root') as HTMLElement).render(
     <Canvas>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <Box position={[-1.2, 0, 0]} />
-      <Box position={[1.2, 0, 0]} />
+      <Sphere
+        position={[0, 0, 0]}
+        radius={2}
+        widthSegments={72}
+        heightSegments={72}
+      />
     </Canvas>
   </React.StrictMode>,
 )
